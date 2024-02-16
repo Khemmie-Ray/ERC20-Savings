@@ -26,12 +26,13 @@ describe("SaveERC20", function () {
     it("Should allow users make deposit", async function () {
         const depositAmount = 100;
         const { w3btoken, saveERC20, owner } = await loadFixture(deploySaveERCFixture);
+        const balBeforeDeposit = await saveERC20.checkUserBalance(owner);
         await w3btoken.connect(owner).approve(saveERC20.target, depositAmount)
-        const savedAmount = await saveERC20.connect(owner).deposit(depositAmount)
-        const sender = owner.address;
+        await saveERC20.connect(owner).deposit(depositAmount)
+        const depositbal = await saveERC20.connect(owner).checkUserBalance(owner.address)
+        // const userBalance =await w3btoken.connect(owner).balanceOf(owner.address)
 
-
-        // await expect(deposit(0).to.be.revertedWith("can't save zero value");
+        expect(depositbal).to.be.greaterThan(balBeforeDeposit);
       });
       it("Should check that the depositor is address 0", async function () {
         const { owner } = await loadFixture(deploySaveERCFixture);
@@ -48,49 +49,23 @@ describe("SaveERC20", function () {
 
         const depositValue = 0;
 
-        expect(saveERC20.deposit(depositValue)).revertedWith("can't withdraw zero value");
+        expect(saveERC20.deposit(depositValue)).revertedWith("can't save zero value");
     }); 
-    // it("should check funds of sender", async function () {
-    //   const { saveERC20 } = await loadFixture(deploySaveERCFixture);
+    it("should check funds of sender", async function () {
+      const { saveERC20 } = await loadFixture(deploySaveERCFixture);
 
-    //   const depositValue = 0;
+      const depositValue = 0;
 
-    //   expect(saveERC20.deposit(depositValue)).revertedWith("can't withdraw zero value");
-  // }); 
+      expect(saveERC20.deposit(depositValue)).revertedWith("can't withdraw zero value");
+  }); 
+  it("should checkbalance of the contract and saver balance", async function () {
+    const { saveERC20 } = await loadFixture(deploySaveERCFixture);
+
+    const depositValue = 0;
+
+    expect(saveERC20.deposit(depositValue)).revertedWith("can't withdraw zero value");
+  }); 
   })
-
-  // describe("Deployment", function () {
-  //   it("Should set the right unlockTime", async function () {
-  //     const { lock, unlockTime } = await loadFixture(deployOneYearLockFixture);
-
-  //     expect(await lock.unlockTime()).to.equal(unlockTime);
-  //   });
-
-  //   it("Should set the right owner", async function () {
-  //     const { lock, owner } = await loadFixture(deployOneYearLockFixture);
-
-  //     expect(await lock.owner()).to.equal(owner.address);
-  //   });
-
-  //   it("Should receive and store the funds to lock", async function () {
-  //     const { lock, lockedAmount } = await loadFixture(
-  //       deployOneYearLockFixture
-  //     );
-
-  //     expect(await ethers.provider.getBalance(lock.target)).to.equal(
-  //       lockedAmount
-  //     );
-  //   });
-
-  //   it("Should fail if the unlockTime is not in the future", async function () {
-  //     // We don't use the fixture here because we want a different deployment
-  //     const latestTime = await time.latest();
-  //     const Lock = await ethers.getContractFactory("Lock");
-  //     await expect(Lock.deploy(latestTime, { value: 1 })).to.be.revertedWith(
-  //       "Unlock time should be in the future"
-  //     );
-  //   });
-  // });
 });
 
 //       // const [owner] = await ethers.getSigners()
