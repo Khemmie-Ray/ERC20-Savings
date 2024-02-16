@@ -2,12 +2,12 @@ import { ethers } from "hardhat";
 
 async function main() {
 
-  const saveERC20 = await ethers.deployContract("SaveERC20", ["0xe25327d529a722BB05ca7cc495528e2CB2Da520F"]);
+  const w3b = await ethers.deployContract("W3b", ["0xdF0a689A22B64C455AE212DBc13AF35f1B1dFD55"]) 
 
-  await saveERC20.waitForDeployment();
+  await w3b.waitForDeployment();
 
   console.log(
-    `SaveERC20 was deployed to ${saveERC20.target}`
+    ` W3b was deployed to ${w3b.target}`
   );
 }
 
